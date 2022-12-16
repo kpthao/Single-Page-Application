@@ -1,6 +1,6 @@
 <script>
 import $ from 'jquery'
-// import L from 'leaflet'
+import L from 'leaflet'
 
 export default {
     data() {
@@ -11,6 +11,7 @@ export default {
             incidents: [],
             address: '',
             map: null,
+            searchQuery: '',
             geojsonLayer: null,
             leaflet: {
                 map: null,
@@ -99,49 +100,17 @@ export default {
             });
         },
         async search(){
-            // Try parsing the search input as longitude and latitude coordinates
-            const coords = this.parseCoords(this.searchInput)
-            //checks if coordinates can be parsed
-            if(coords) {
-                // Check if the coordinates are within the bounds
-                if (!(this.leaflet.center.lat >= 44.883658 && this.leaflet.center.lat <= 45.008206 && this.leaflet.center.lng >= -93.217977 && this.leaflet.center.lng <= -92.993787)) {
-                    console.alert('Coordinates are not within bounds. Please enter something that is within bounds.');
-                    return;
-                }
-                this.panTo(coords);
-                return;
-            }
-            try {
-                const res = await this.geocode(this.searchInput)
-                if(res.length > 0) {
-                    const coords = res[0].center
-                    this.panTo(res[0].center)
-                
-                    // Check if the coordinates are within the GeoJSON layer
-                    if(!(this.geojsonlayer.getBounds().contains(coords))){
-                        console.alert("The address you submitted is not within the GeoJSON layer")
-                    }
-                }
-            } catch (error) {
-                console.error(error)
-            }
-        },
-        //parses coordinates
-        parseCoords(input){
-            const matches = input.match(/^\s*(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)\s*$/)
-            if(matches){
-                return [parseFloat(matches[1], parseFloat(matches[2]))]
-            }
-            return null
-        },
-        //takes an input string and returns the latitude and logitude coodinations for location
-        async geocode(input){
-            const response = await fetch('/data/StPaulDistrictCouncil.geojson')
-            return response.json()
-        },
-        //pans to location on map
-        panTo(coords){
-            this.map.panTo(coords)
+            //Use Nominatim to search for the location
+            // 44.959716760336484,-93.20777042679448
+            // https://nominatim.openstreetmap.org/ui/reverse.html?lat=44.959716760336484&lon=-93.20777042679448&zoom=14&format=json
+            
+            const response = await fetch(`https://nominatim.openstreetmap.org/reverse.html?${this.searchQuery}&format=json`)
+            console.log(this.searchQuery)
+            const data = await response.json()
+            const location = data[0]
+
+            // Zoom to location on the map
+            this.leaflet.map.setView([location.lat, location.lon], this.leaflet.zoom)
         }
     },
     //Sets up Leaflet map and adds it to the page. Also adds tile layer and GeoJSON data to the map.
@@ -179,10 +148,12 @@ export default {
     </div>
     <div v-show="view === 'map'">
         <div class="grid-container">
-            <div>
-                <input type="text" v-model="searchInput" />
-                <button @click="search">Search</button>
-            </div>
+            <!-- text box and search button -->
+            <form id="search-form">
+                <input type="text" v-model="searchQuery" />
+                <button type="submit" @click.prevent="search" class="button">Search</button>
+            </form>
+            <!-- actual map object -->
             <div class="grid-x grid-padding-x">
                 <div id="leafletmap" class="cell auto"></div>
             </div>
@@ -225,11 +196,11 @@ export default {
         <!-- Replace this with your actual form: can be done here or by making a new component -->
         <div class="grid-container">
             <div class="grid-x grid-padding-x">
-                <h1 class="cell small-12 medium-12 large-12">New Incident Form</h1>
+                <h1 class="cell small-12 medium-12 large-12 new-incident-form">New Incident Form</h1>
             </div>
         </div>
         <form>
-            <div class="grid-container">
+            <div class="grid-container" style='border: 1px solid black'>
                 <div class="grid-x grid-padding-x">
                     <div class="cell small-12 medium-6 large-4">
                         <label for="case">Case Number:</label>
@@ -264,13 +235,11 @@ export default {
                         <input type="text" id="Street" name="Street">
                     </div>
                     <div class="cell small-12 medium-6 large-4">
-                        <input type="button" value="SUBMIT">
+                        <input type="button" value="SUBMIT" class="button">
                     </div>
                 </div>
             </div>
         </form>
-
-
     </div>
     <div v-if="view === 'about'">
         <!-- Replace this with your actual about the project content: can be done here or by making a new component -->
@@ -343,6 +312,12 @@ table, th, td{
     background-color:darkgrey;
 }
 .about-the-project{
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    border: 1px solid black;
+}
+.new-incident-form{
     padding: 2rem;
     display: flex;
     justify-content: center;
