@@ -59,6 +59,13 @@ export default {
             this.view = 'about';
         },
 
+        mapChange(event){
+            this.panTo([44.955139, -93.102222])
+            
+            this.leaflet.center.lat= 44.955139;
+            this.leaflet.center.lng = -93.102222;
+        },
+
         getJSON(url) {
             return new Promise((resolve, reject) => {
                 $.ajax({
@@ -179,6 +186,38 @@ export default {
             <div class="grid-x grid-padding-x">
                 <div id="leafletmap" class="cell auto"></div>
             </div>
+            <!-- This is the stuff for making the 'incidents' table underneath the map-->
+            <div class="grid-x grid-padding-x">
+                <button type="button" @click="mapChange">TEST</button>
+                <div>____</div>
+                <button type="button">TEST2</button>
+                <div>____</div>
+                <p @click="mapChange">TEST3</p>
+                <table>
+                    <tr>
+                        <th>Item</th>
+                        <th>Case Number</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Code</th>
+                        <th>Incident</th>
+                        <th>Police-Grid</th>
+                        <th>Neighborhood</th>
+                        <th>Block</th>
+                    </tr>
+                    <tr v-for="index in 1000" :key="index">
+                        <td> {{index}} #</td>
+                        <td>CASE</td>
+                        <td>DATE</td>
+                        <td>TIME</td>
+                        <td>CODE</td>
+                        <td>INCIDENT</td>
+                        <td>POLICE-Grid</td>
+                        <td>NEIGHBORHOOD</td>
+                        <td>BLOCK</td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
     <div v-if="view === 'new_incident'">
@@ -191,9 +230,37 @@ export default {
     </div>
     <div v-if="view === 'about'">
         <!-- Replace this with your actual about the project content: can be done here or by making a new component -->
+        <!-- 
+            Promisve.all([getJSON(...), getJSON(...), getJSON(...)]) makes it so the .then does not trigger until they are all done 
+            .then((results)=>{})
+            .catch((err)=>{});
+            Ideal for the crime API we need to get data from. 
+            results will be a list, results[0] will be the first promise, 
+            results[1] will be the data with the second promise, etc...
+        this.getJSON('/data/StPaulDistrictCouncil.geojson').then((result) => {
+            // St. Paul GeoJSON
+            $(result.features).each((key, value) => {
+                district_boundary.addData(value);
+            });
+        }).catch((error) => {
+            console.log('Error:', error);
+        });
+        Code from up above
+            
+        -->
         <div class="grid-container">
             <div class="grid-x grid-padding-x">
-                <h1 class="cell auto">About the Project</h1>
+                <h1 class="cell small-12 medium-12 large-12">About the Project</h1>
+
+                <div class ="cell small-12 medium-4 large-4" >
+                    <h3>Kong Pheng Thao</h3>
+                </div>
+                <div class = "cell small-12 medium-4 large-4">
+                    <h3>Michael Andreucci</h3>
+                </div>
+                <div class="cell small-12 medium-4 large-4">
+                    <h3>Andrew Steichen</h3>
+                </div>
             </div>
         </div>
     </div>
@@ -218,5 +285,10 @@ export default {
     text-align: center;
     cursor: pointer;
 }
-
+table, th, td{
+    text-align:center;
+    color: black;
+    border: 1px solid black;
+    background-color:darkgrey;
+}
 </style>
