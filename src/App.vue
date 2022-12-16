@@ -250,16 +250,23 @@ export default {
         -->
         <div class="grid-container">
             <div class="grid-x grid-padding-x">
-                <h1 class="cell small-12 medium-12 large-12">About the Project</h1>
+                <h1 class="cell small-12 medium-12 large-12 about-the-project">About the Project</h1>
 
-                <div class ="cell small-12 medium-4 large-4" >
-                    <h3>Kong Pheng Thao</h3>
+                <div class ="cell small-12 medium-4 large-4 person-box">
+                    <img src="photos/KP_photo.jpg" alt="Photo of Kong Pheng Thao">
+                    <h3 class="name-header">Kong Pheng Thao</h3>
+                    <div>
+                        Hello, I'm a senior at the University of St. Thomas studying computer science. I have always been interested in technology and the things you can do with it. As such, I find that computer science can bring so much leisure as well as joy in people's lives.
+                    </div>
                 </div>
-                <div class = "cell small-12 medium-4 large-4">
+                <div class = "cell small-12 medium-4 large-4 person-box">
                     <h3>Michael Andreucci</h3>
                 </div>
-                <div class="cell small-12 medium-4 large-4">
+                <div class="cell small-12 medium-4 large-4 person-box">
                     <h3>Andrew Steichen</h3>
+                </div>
+                <div class="cell small-12 medium-12 large-12 description">
+                    <h1>Description of the Tools</h1>
                 </div>
             </div>
         </div>
@@ -290,5 +297,23 @@ table, th, td{
     color: black;
     border: 1px solid black;
     background-color:darkgrey;
+}
+.about-the-project{
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    border: 1px solid black;
+}
+.person-box{
+    border: 1px solid black;
+}
+.name-header{
+    display: flex;
+    justify-content: center;
+}
+.description{
+    padding-top: 2rem;
+    display: flex;
+    justify-content: center;
 }
 </style>
