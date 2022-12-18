@@ -63,14 +63,6 @@ export default {
             this.view = 'about';
         },
 
-        viewAddressSubmission(event) {
-            this.view = 'address'
-        },
-
-        viewCoordinateSubmission(event) {
-            this.view = 'latitude-and-longitude'
-        },
-
         mapChange(event){
             this.panTo([44.955139, -93.102222])
             
@@ -112,7 +104,6 @@ export default {
         },
         async searchAddress(){
             //Use Nominatim to search for the location
-            // 44.959716760336484,-93.20777042679448
             console.log(this.searchAddressQuery)
 
             // Check if the search AddressQuery is empty
@@ -121,10 +112,6 @@ export default {
                 alert('Please enter an address to search')
                 return
             }
-            // const geocoder = L.control.geocoder('nominatim').addTo(this.leaflet.map)
-            // const geocoder = new L.Control.Geocoder().addTo(this.leaflet.map)
-            //Use Leaflet's geocoding plugin to search for the address
-            // geocoder.Geocoder.Geocode(this.searchAddressQuery, (results) =>
             L.Control.Geocoder.nominatim().geocode(this.searchAddressQuery, (results) =>
             {
                 //Check if there are any results
@@ -207,7 +194,7 @@ export default {
             <form id="search-form" style="padding: 1rem">
                 <div class="grid-x grid-padding-x" style="border: 1px solid black">
                     <div class="cell small-12 medium-6 large-6">
-                        <label for="case" style="padding-top: 1rem">Address:</label>
+                        <label for="case" style="padding-top: 1rem">Address: (ex. East 7th Street Saint Paul Minnesota)</label>
                         <input type="text" v-model="searchAddressQuery" placeholder="Please enter an address here"/>
                         <button type="submit" @click.prevent="searchAddress" class="button">Search</button>
                     </div>
@@ -350,7 +337,41 @@ export default {
                     <h3>Andrew Steichen</h3>
                 </div>
                 <div class="cell small-12 medium-12 large-12 description">
-                    <h1>Description of the Tools</h1>
+                    <h1 class="about-the-project">Description of the Tools</h1>
+                </div>
+                <div class="cell small-12 medium-4 large-4 person-box">
+                    <h3 class="name-header">Leaflet</h3>
+                    <div class="text-center">
+                        Leaflet is an open-source JavaScript library for creating interactive maps. It is designed to be lightweight and easy to use, and it is widely used for creating web-based maps for a variety of purposes, such as real estate, travel, and data visualization.
+                        <br><br>
+                        Leaflet is built on top of the widely used open-source mapping library, OpenLayers, and it uses a similar API. It is a flexible library that allows developers to create a wide range of maps, from simple street maps to complex interactive maps with custom markers, popups, and layers.
+                    </div>
+                </div>
+                <div class="cell small-12 medium-4 large-4 person-box">
+                    <h3 class="name-header">Leaflet-Control-Geocoder</h3>
+                    <div class="text-center">
+                        leaflet-control-geocoder is a plugin for the Leaflet JavaScript library that adds geocoding functionality to Leaflet maps. Geocoding is the process of converting an address or place name into a set of geographic coordinates (latitude and longitude), and vice versa.
+                        <br><br>
+                        leaflet-control-geocoder adds a search box to the map, which allows users to search for an address or place name and have the map automatically pan and zoom to that location. It uses various geocoding services (such as Nominatim and Google Maps) to perform the geocoding, and it can be customized to use a specific service or a combination of services.
+                    </div>
+                </div>
+                <div class="cell small-12 medium-4 large-4 person-box">
+                    <h3 class="name-header">JQuery</h3>
+                    <div class="text-center">
+                        jQuery is a fast, small, and feature-rich JavaScript library that makes it easy to interact with HTML documents. It is widely used to simplify client-side scripting of HTML, and it is designed to make it easier to navigate a document, select DOM elements, create animations, handle events, and develop Ajax applications.
+                    </div>
+                </div>
+                <div class="cell small-12 medium-4 large-4 person-box">
+                    <h3 class="name-header">Vue.JS</h3>
+                    <div class="text-center">
+                        Vue.js is an open-source JavaScript framework for building web applications. It is designed to be lightweight, easy to use, and flexible, and it allows developers to create single-page applications (SPAs) and reactive user interfaces.
+                    </div>
+                </div>
+                <div class="cell small-12 medium-4 large-4 person-box" style="padding-bottom: 2rem">
+                    <h3 class="name-header">Foundation</h3>
+                    <div class="text-center">
+                        Foundation is a responsive front-end framework that allows developers to quickly and easily create responsive websites and web applications. It is designed to be lightweight, customizable, and easy to use, and it provides a range of features and tools to help developers build responsive layouts, style elements, and add functionality to their projects.
+                    </div>
                 </div>
             </div>
         </div>
@@ -398,12 +419,21 @@ table, th, td{
     border: 1px solid black;
 }
 .name-header{
+    padding-top: 1rem;
     display: flex;
     justify-content: center;
+    font-weight: bold;
+    text-decoration: underline;
+    text-align: center;
 }
 .description{
     padding-top: 2rem;
     display: flex;
     justify-content: center;
+}
+.text-center{
+    text-align: center;
+    /* padding-top: 1rem; */
+    padding-bottom: 1rem;
 }
 </style>
