@@ -7,11 +7,15 @@ export default {
     data() {
         return {
             view: 'map',
+            codes: '',
             codes: [],
+            neighborhood: '',
             neighborhoods: [],
+            accidents: '',
             incidents: [],
             address: '',
             map: null,
+            Case: '', date: '', time: '', code: '', incident: '',pGrid: '',neighborhood: '', street: '',
             searchAddressQuery: '',
             searchLatQuery: '',
             searchLngQuery: '',
@@ -102,6 +106,71 @@ export default {
                 });
             });
         },
+        getDatabase(){
+            let incident_url = "http://localhost:8000/incidents?" + query;
+            let neighborhood_url = "http://localhost:8000/neighborhoods";
+            let code_url = "http://localhost:8000/codes"
+            Promise.all([this.getJSON(incident_url),this.getJSON(neighborhood_url),this.getJSON(code_url)])
+            .then((results) => {
+                console.log(results)
+                this.incidents = JSON.parse(JSON.stringify(results[0]));            
+                this.neighborhoods = JSON.parse(JSON.stringify(results[1]));
+                this.codes = JSON.parse(JSON.stringify(results[2]));
+            })
+            .catch((error) =>{
+                console.log("Error:", error);
+            })
+            // <!-- 
+            // Promisve.all([getJSON(...), getJSON(...), getJSON(...)]) makes it so the .then does not trigger until they are all done 
+            // .then((results)=>{})
+            // .catch((err)=>{});
+            // Ideal for the crime API we need to get data from. 
+            // results will be a list, results[0] will be the first promise, 
+            // results[1] will be the data with the second promise, etc...
+            // this.getJSON('/data/StPaulDistrictCouncil.geojson').then((result) => {
+            //     // St. Paul GeoJSON
+            //     $(result.features).each((key, value) => {
+            //         district_boundary.addData(value);
+            // });
+            // }).catch((error) => {
+            //     console.log('Error:', error);
+            // });
+            // Code from up above
+            
+            // -->
+        },
+        newAccidentSubmit(data){
+            console.log("inside submit")
+            $.ajax({
+                type: 'PUT',
+                url: 'http://localhost:8000/new-accident-submit',
+                data: JSON.stringify(data),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'text',
+                success: function(response) {
+                    console.log('Record updated successfully');
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error inserting record:', error);
+                }
+            });
+        },
+        deleteIncident(caseNumber){
+            $.ajax({
+                type: 'DELETE',
+                url: "http://localhost:8000/remove-incident",
+                contentType: 'application/json',
+                data: "{\"case_number\":"+String(caseNumber)+"}",
+                success: function(response) {
+                  // handle success
+                  this.leaflet.map.reload()
+                },
+                error: function(error) {
+                  // handle error
+                  console.log("whoops");
+                }
+            });
+        },
         async searchAddress(){
             //Use Nominatim to search for the location
             console.log(this.searchAddressQuery)
@@ -154,6 +223,7 @@ export default {
             // Set the center of the map to the latitude and longitude entered
             this.leaflet.map.setView([this.searchLatQuery, this.searchLngQuery], 17)
         }
+
     },
     //Sets up Leaflet map and adds it to the page. Also adds tile layer and GeoJSON data to the map.
     mounted() {
@@ -176,6 +246,8 @@ export default {
         }).catch((error) => {
             console.log('Error:', error);
         });
+        //Initialize Database on loadup
+        this.getDatabase;
     }
 }
 </script>
@@ -229,7 +301,19 @@ export default {
                         <th>Neighborhood</th>
                         <th>Block</th>
                     </tr>
-                    <tr v-for="index in 1000" :key="index">
+                    <tr v-for="(value, key) in this.incidents" :key="key">
+                        <button type="button" class="button" @click="selectedCrimeMarker(value.block)" style="margin-top: 15px">Find Location</button>
+                        <td>{{ value.case_number }}</td>
+                        <td v-text="getType(value.code)"></td> 
+                        <td>{{ value.incident }}</td>
+                        <td>{{ value.date }}</td>
+                        <td>{{ value.time }}</td>
+                        <td>{{ value.police_grid }}</td>
+                        <td v-text="getNeighborhood(value.neighborhood_number)"></td>
+                        <td v-text="replaceX(value.block)"></td>
+                        <td><input type="submit" value="Delete" class="button alert" @click="deleteIncident(value.case_number)"></td>
+                    </tr> 
+                    <!-- <tr v-for="index in 1000" :key="index">
                         <td> {{index}} #</td>
                         <td>CASE</td>
                         <td>DATE</td>
@@ -239,27 +323,9 @@ export default {
                         <td>POLICE-Grid</td>
                         <td>NEIGHBORHOOD</td>
                         <td>BLOCK</td>
-                    </tr>
+                    </tr> -->
                 </table>
             </div>
-                    <!-- 
-            Promisve.all([getJSON(...), getJSON(...), getJSON(...)]) makes it so the .then does not trigger until they are all done 
-            .then((results)=>{})
-            .catch((err)=>{});
-            Ideal for the crime API we need to get data from. 
-            results will be a list, results[0] will be the first promise, 
-            results[1] will be the data with the second promise, etc...
-            this.getJSON('/data/StPaulDistrictCouncil.geojson').then((result) => {
-                // St. Paul GeoJSON
-                $(result.features).each((key, value) => {
-                    district_boundary.addData(value);
-            });
-            }).catch((error) => {
-                console.log('Error:', error);
-            });
-            Code from up above
-            
-            -->
         </div>
     </div>
 
@@ -276,38 +342,38 @@ export default {
                 <div class="grid-x grid-padding-x">
                     <div class="cell small-12 medium-6 large-4">
                         <label for="case">Case Number:</label>
-                        <input type="text" id="case" name="case">
+                        <input type="text" id="case" name="case" v-model="Case">
                     </div>
                     <div class="cell small-12 medium-6 large-4">
                         <label for="Date">Date (YYYY-MM-DD):</label>
-                        <input type="text" id="Date" name="Date">
+                        <input type="text" id="Date" name="Date" v-model="date">
                     </div>
                     <div class="cell small-12 medium-6 large-4">
                         <label for="Time">Time (HR:MM:SS):</label>
-                        <input type="text" id="Time" name="Time">
+                        <input type="text" id="Time" name="Time" v-model="time">
                     </div>
                     <div class="cell small-12 medium-6 large-4">
                         <label for="Code">Code:</label>
-                        <input type="text" id="Code" name="Code">
+                        <input type="text" id="Code" name="Code" v-model="code">
                     </div>
                     <div class="cell small-12 medium-6 large-4">
                         <label for="Incident">Incident</label>
-                        <input type="text" id="Incident" name="Incident">
+                        <input type="text" id="Incident" name="Incident" v-model="incident">
                     </div>
                     <div class="cell small-12 medium-6 large-4">
                         <label for="PGrid">Police Grid</label>
-                        <input type="text" id="PGrid" name="PGrid">
+                        <input type="text" id="PGrid" name="PGrid" v-model="pGrid">
                     </div>
                     <div class="cell small-12 medium-6 large-4">
                         <label for="Neighbor">Neighborhood Name:</label>
-                        <input type="text" id="Neighbor" name="Neighbor">
+                        <input type="text" id="Neighbor" name="Neighbor" v-model="neighborhood">
                     </div>
                     <div class="cell small-12 medium-6 large-4">
                         <label for="Street">Block/Street:</label>
-                        <input type="text" id="Street" name="Street">
+                        <input type="text" id="Street" name="Street" v-model="street">
                     </div>
                     <div class="cell small-12 medium-6 large-4">
-                        <input type="button" value="SUBMIT" class="button">
+                        <input type="button" value="SUBMIT" class="button" @click.prevent="newAccidentSubmit">
                     </div>
                 </div>
             </div>
@@ -379,7 +445,6 @@ export default {
                         Foundation is a responsive front-end framework that allows developers to quickly and easily create responsive websites and web applications. It is designed to be lightweight, customizable, and easy to use, and it provides a range of features and tools to help developers build responsive layouts, style elements, and add functionality to their projects.
                     </div>
                 </div>
-
                 <div class="cell small-12 medium-12 large-12 description">
                     <h1 class="about-the-project">Video Demo</h1>
                 </div>
@@ -388,7 +453,6 @@ export default {
                         video link 
                     </div>
                 </div>
-
                 <div class="cell small-12 medium-12 large-12 description">
                     <h1 class="about-the-project">6 Interesting Things</h1>
                 </div>
