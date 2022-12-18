@@ -328,10 +328,10 @@ export default {
                     </div>
                 </div>
                 <div class = "cell small-12 medium-4 large-4 person-box">
-                    <img src="photos/MA_photo.jpg" alt="MICHAEL PHOTO" width="500px" height="500px">
+                    <img src="photos/MA_photo.jpg" alt="Photo of Michael Andreucci" width="500px" height="600px">
                     <h3 class="name-header">Michael Andreucci</h3>
                     <div>
-                        ENTER TEXT ABOUT MICHAEL HERE
+                        Hello, I am currently a senior at St. Thomas studying Computer science. I am currently planning to focus on machine learning after I graduate in the spring. I find machine learnings potential to be fascinating and want to see how much AI can improve the world. 
                     </div>
                 </div>
                 <div class="cell small-12 medium-4 large-4 person-box">
