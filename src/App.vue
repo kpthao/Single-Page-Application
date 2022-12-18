@@ -1,6 +1,7 @@
 <script>
 import $ from 'jquery'
 import L from 'leaflet'
+import 'leaflet-control-geocoder'
 
 export default {
     data() {
@@ -112,8 +113,7 @@ export default {
         async searchAddress(){
             //Use Nominatim to search for the location
             // 44.959716760336484,-93.20777042679448
-            // https://nominatim.openstreetmap.org/ui/reverse.html?lat=44.959716760336484&lon=-93.20777042679448&zoom=14&format=json
-            console.log(this.searchQuery)
+            console.log(this.searchAddressQuery)
 
             // Check if the search AddressQuery is empty
             if(this.searchAddressQuery === ''){
@@ -121,16 +121,21 @@ export default {
                 alert('Please enter an address to search')
                 return
             }
-
+            // const geocoder = L.control.geocoder('nominatim').addTo(this.leaflet.map)
+            // const geocoder = new L.Control.Geocoder().addTo(this.leaflet.map)
             //Use Leaflet's geocoding plugin to search for the address
-            L.control.Geocoder.nominatim().geocode(this.searchAddressQuery, (results) =>
+            // geocoder.Geocoder.Geocode(this.searchAddressQuery, (results) =>
+            L.Control.Geocoder.nominatim().geocode(this.searchAddressQuery, (results) =>
             {
                 //Check if there are any results
                 if(results.length > 0){
+                    console.log(results)
                     //if there are, get the first result
                     const result = results[0]
+                    console.log(results[0])
+                    console.log(result.center.lat, result.center.lng)
                     //Set the center of the map to the latitude and longitude of the result
-                    this.leaflet.map.setView([result.lat, result.lng], 17)
+                    this.leaflet.map.setView([result.center.lat, result.center.lng], 17)
                     //Update the searchLatQuery and searchLngQuery values
                     this.searchLatQuery = result.lat
                     this.searchLngQuery = result.lng;
