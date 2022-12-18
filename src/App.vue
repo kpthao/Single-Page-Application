@@ -11,7 +11,9 @@ export default {
             incidents: [],
             address: '',
             map: null,
-            searchQuery: '',
+            searchAddressQuery: '',
+            searchLatQuery: '',
+            searchLngQuery: '',
             geojsonLayer: null,
             leaflet: {
                 map: null,
@@ -60,6 +62,14 @@ export default {
             this.view = 'about';
         },
 
+        viewAddressSubmission(event) {
+            this.view = 'address'
+        },
+
+        viewCoordinateSubmission(event) {
+            this.view = 'latitude-and-longitude'
+        },
+
         mapChange(event){
             this.panTo([44.955139, -93.102222])
             
@@ -99,18 +109,58 @@ export default {
                 });
             });
         },
-        async search(){
+        async searchAddress(){
             //Use Nominatim to search for the location
             // 44.959716760336484,-93.20777042679448
             // https://nominatim.openstreetmap.org/ui/reverse.html?lat=44.959716760336484&lon=-93.20777042679448&zoom=14&format=json
-            
-            const response = await fetch(`https://nominatim.openstreetmap.org/reverse.html?${this.searchQuery}&format=json`)
             console.log(this.searchQuery)
-            const data = await response.json()
-            const location = data[0]
 
-            // Zoom to location on the map
-            this.leaflet.map.setView([location.lat, location.lon], this.leaflet.zoom)
+            // Check if the search AddressQuery is empty
+            if(this.searchAddressQuery === ''){
+                //if it's empty, show an error message
+                alert('Please enter an address to search')
+                return
+            }
+
+            //Use Leaflet's geocoding plugin to search for the address
+            L.control.Geocoder.nominatim().geocode(this.searchAddressQuery, (results) =>
+            {
+                //Check if there are any results
+                if(results.length > 0){
+                    //if there are, get the first result
+                    const result = results[0]
+                    //Set the center of the map to the latitude and longitude of the result
+                    this.leaflet.map.setView([result.lat, result.lng], 17)
+                    //Update the searchLatQuery and searchLngQuery values
+                    this.searchLatQuery = result.lat
+                    this.searchLngQuery = result.lng;
+                } else {
+                    //if there are no results, show an error message
+                    alert('No results found for the given address')
+                }
+            })
+        },
+        async searchCoordinate(){
+            // Check if the searchLatQuery or searchLngQuery is empty
+            if(this.searchLatQuery === '' || this.searchLngQuery === ''){
+                alert('Please enter a latitude and longitude to search')
+                return
+            }
+
+            // Check if the searchLatQuery is a valid latitude
+            if(isNaN(this.searchLatQuery) || this.searchLatQuery < -90 || this.searchLatQuery > 90){
+                // If it's not a valid latitude, show an error message
+                alert('Please enter a valid latitude')
+                return
+            }
+
+            if(isNaN(this.searchLngQuery) || this.searchLngQuery < -180 || this.searchLngQuery > 180){
+                alert('Please enter a valid longitude')
+                return
+            }
+
+            // Set the center of the map to the latitude and longitude entered
+            this.leaflet.map.setView([this.searchLatQuery, this.searchLngQuery], 17)
         }
     },
     //Sets up Leaflet map and adds it to the page. Also adds tile layer and GeoJSON data to the map.
@@ -149,9 +199,25 @@ export default {
     <div v-show="view === 'map'">
         <div class="grid-container">
             <!-- text box and search button -->
-            <form id="search-form">
-                <input type="text" v-model="searchQuery" />
-                <button type="submit" @click.prevent="search" class="button">Search</button>
+            <form id="search-form" style="padding: 1rem">
+                <div class="grid-x grid-padding-x" style="border: 1px solid black">
+                    <div class="cell small-12 medium-6 large-6">
+                        <label for="case" style="padding-top: 1rem">Address:</label>
+                        <input type="text" v-model="searchAddressQuery" placeholder="Please enter an address here"/>
+                        <button type="submit" @click.prevent="searchAddress" class="button">Search</button>
+                    </div>
+                    <div class="cell small-12 medium-6 large-6">
+                        <div>
+                            <label for="case"  style="padding-top: 1rem">Latitude: (ex. 44.959716760336484)</label>
+                            <input type="text" v-model="searchLatQuery" placeholder="Please enter latitude here"/>
+                        </div>
+                        <div>
+                            <label for="case">Longitude: (ex. -93.20777042679448)</label>
+                            <input type="text" v-model="searchLngQuery" placeholder="Please enter longitude here"/>
+                        </div>
+                        <button type="submit" @click.prevent="searchCoordinate" class="button">Search</button>
+                    </div>
+                </div>
             </form>
             <!-- actual map object -->
             <div class="grid-x grid-padding-x">
