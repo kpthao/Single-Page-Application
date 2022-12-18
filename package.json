@@ -3,17 +3,17 @@
   "version": "1.0.0",
   "description": "RESTful Web Server and Single Page Application",
   "author": {
-    "name": "",
-    "email": ""
+    "name": "Kong Pheng Thao",
+    "email": "thao8615@stthomas.edu"
   },
   "contributors": [
     {
-      "name": "",
-      "email": ""
+      "name": "Michael Andreucci",
+      "email": "andr8800@stthomas.edu"
     },
     {
-      "name": "",
-      "email": ""
+      "name": "Andrew Steichen",
+      "email": "stei7041@stthomas.edu"
     }
   ],
   "repository": {

@@ -217,11 +217,6 @@ export default {
             </div>
             <!-- This is the stuff for making the 'incidents' table underneath the map-->
             <div class="grid-x grid-padding-x">
-                <button type="button" @click="mapChange">TEST</button>
-                <div>____</div>
-                <button type="button">TEST2</button>
-                <div>____</div>
-                <p @click="mapChange">TEST3</p>
                 <table>
                     <tr>
                         <th>Item</th>
@@ -247,8 +242,27 @@ export default {
                     </tr>
                 </table>
             </div>
+                    <!-- 
+            Promisve.all([getJSON(...), getJSON(...), getJSON(...)]) makes it so the .then does not trigger until they are all done 
+            .then((results)=>{})
+            .catch((err)=>{});
+            Ideal for the crime API we need to get data from. 
+            results will be a list, results[0] will be the first promise, 
+            results[1] will be the data with the second promise, etc...
+            this.getJSON('/data/StPaulDistrictCouncil.geojson').then((result) => {
+                // St. Paul GeoJSON
+                $(result.features).each((key, value) => {
+                    district_boundary.addData(value);
+            });
+            }).catch((error) => {
+                console.log('Error:', error);
+            });
+            Code from up above
+            
+            -->
         </div>
     </div>
+
     <!-- FORM INPUT STUFF-->
     <div v-if="view === 'new_incident'">
         <!-- Replace this with your actual form: can be done here or by making a new component -->
@@ -301,41 +315,33 @@ export default {
     </div>
     <div v-if="view === 'about'">
         <!-- Replace this with your actual about the project content: can be done here or by making a new component -->
-        <!-- 
-            Promisve.all([getJSON(...), getJSON(...), getJSON(...)]) makes it so the .then does not trigger until they are all done 
-            .then((results)=>{})
-            .catch((err)=>{});
-            Ideal for the crime API we need to get data from. 
-            results will be a list, results[0] will be the first promise, 
-            results[1] will be the data with the second promise, etc...
-        this.getJSON('/data/StPaulDistrictCouncil.geojson').then((result) => {
-            // St. Paul GeoJSON
-            $(result.features).each((key, value) => {
-                district_boundary.addData(value);
-            });
-        }).catch((error) => {
-            console.log('Error:', error);
-        });
-        Code from up above
-            
-        -->
+
         <div class="grid-container">
             <div class="grid-x grid-padding-x">
                 <h1 class="cell small-12 medium-12 large-12 about-the-project">About the Project</h1>
 
                 <div class ="cell small-12 medium-4 large-4 person-box">
-                    <img src="photos/KP_photo.jpg" alt="Photo of Kong Pheng Thao">
+                    <img src="photos/KP_photo.jpg" alt="Photo of Kong Pheng Thao" width="500px" height="500px">
                     <h3 class="name-header">Kong Pheng Thao</h3>
                     <div>
                         Hello, I'm a senior at the University of St. Thomas studying computer science. I have always been interested in technology and the things you can do with it. As such, I find that computer science can bring so much leisure as well as joy in people's lives.
                     </div>
                 </div>
                 <div class = "cell small-12 medium-4 large-4 person-box">
-                    <h3>Michael Andreucci</h3>
+                    <img src="photos/MA_photo.jpg" alt="MICHAEL PHOTO" width="500px" height="500px">
+                    <h3 class="name-header">Michael Andreucci</h3>
+                    <div>
+                        ENTER TEXT ABOUT MICHAEL HERE
+                    </div>
                 </div>
                 <div class="cell small-12 medium-4 large-4 person-box">
-                    <h3>Andrew Steichen</h3>
+                    <img src="photos/AS_photo.png" alt="Photo of Andrew Steichen" width="500px" height="500px">
+                    <h3 class="name-header">Andrew Steichen</h3>
+                    <div>
+                        I am a senior at St. Thomas studying Computer Science, getting better at it every day. I have found my favorite specialization to be within information security, mainly due to its direct problem-solving nature. 
+                    </div>
                 </div>
+
                 <div class="cell small-12 medium-12 large-12 description">
                     <h1 class="about-the-project">Description of the Tools</h1>
                 </div>
@@ -371,6 +377,55 @@ export default {
                     <h3 class="name-header">Foundation</h3>
                     <div class="text-center">
                         Foundation is a responsive front-end framework that allows developers to quickly and easily create responsive websites and web applications. It is designed to be lightweight, customizable, and easy to use, and it provides a range of features and tools to help developers build responsive layouts, style elements, and add functionality to their projects.
+                    </div>
+                </div>
+
+                <div class="cell small-12 medium-12 large-12 description">
+                    <h1 class="about-the-project">Video Demo</h1>
+                </div>
+                <div class="cell small-12 medium-12 large-12 person-box" style="padding-bottom: 2rem">
+                    <div class="text-center">
+                        video link 
+                    </div>
+                </div>
+
+                <div class="cell small-12 medium-12 large-12 description">
+                    <h1 class="about-the-project">6 Interesting Things</h1>
+                </div>
+                <div class="cell small-12 medium-4 large-4 person-box" style="padding-bottom: 2rem">
+                    <h3 class="name-header">1</h3>
+                    <div class="text-center">
+                        thing
+                    </div>
+                </div>
+                <div class="cell small-12 medium-4 large-4 person-box" style="padding-bottom: 2rem">
+                    <h3 class="name-header">2</h3>
+                    <div class="text-center">
+                        thing
+                    </div>
+                </div>
+                <div class="cell small-12 medium-4 large-4 person-box" style="padding-bottom: 2rem">
+                    <h3 class="name-header">3</h3>
+                    <div class="text-center">
+                        thing
+                    </div>
+                </div>
+                <div class="cell small-12 medium-4 large-4 person-box" style="padding-bottom: 2rem">
+                    <h3 class="name-header">4</h3>
+                    <div class="text-center">
+                        thing
+                    </div>
+                </div>
+                <div class="cell small-12 medium-4 large-4 person-box" style="padding-bottom: 2rem">
+                    <h3 class="name-header">5</h3>
+                    <div class="text-center">
+                        thing
+                    </div>
+                </div>
+                <div class="cell small-12 medium-4 large-4 person-box" style="padding-bottom: 2rem">
+                    <h3 class="name-header">6</h3>
+                    <div class="text-center">
+                        thing
                     </div>
                 </div>
             </div>
