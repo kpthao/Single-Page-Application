@@ -2,6 +2,7 @@
 import $ from 'jquery'
 import L from 'leaflet'
 import 'leaflet-control-geocoder'
+import new_incident from './components/new_incident.vue'
 
 export default {
     data() {
@@ -106,7 +107,7 @@ export default {
                 });
             });
         },
-        getDatabase(){
+        getDatabase(query=""){
             let incident_url = "http://localhost:8000/incidents?" + query;
             let neighborhood_url = "http://localhost:8000/neighborhoods";
             let code_url = "http://localhost:8000/codes"
@@ -116,6 +117,7 @@ export default {
                 this.incidents = JSON.parse(JSON.stringify(results[0]));            
                 this.neighborhoods = JSON.parse(JSON.stringify(results[1]));
                 this.codes = JSON.parse(JSON.stringify(results[2]));
+                this.drawMarker();
             })
             .catch((error) =>{
                 console.log("Error:", error);
@@ -139,7 +141,7 @@ export default {
             
             // -->
         },
-        newAccidentSubmit(data){
+      /*  newAccidentSubmit(data){
             console.log("inside submit")
             $.ajax({
                 type: 'PUT',
@@ -154,7 +156,7 @@ export default {
                     console.error('Error inserting record:', error);
                 }
             });
-        },
+        },*/
         deleteIncident(caseNumber){
             $.ajax({
                 type: 'DELETE',
@@ -191,6 +193,7 @@ export default {
                     console.log(results[0])
                     console.log(result.center.lat, result.center.lng)
                     //Set the center of the map to the latitude and longitude of the result
+                    //this.current_marker = new L.Marker([result[0].lat,result[0].lon]).addTo(this.leaflet.map);
                     this.leaflet.map.setView([result.center.lat, result.center.lng], 17)
                     //Update the searchLatQuery and searchLngQuery values
                     this.searchLatQuery = result.lat
@@ -222,6 +225,8 @@ export default {
 
             // Set the center of the map to the latitude and longitude entered
             this.leaflet.map.setView([this.searchLatQuery, this.searchLngQuery], 17)
+            let marker = new L.Marker([this.searchLatQuery, this.searchLngQuery])
+            marker.addTo(this.leaflet.map)
         }
 
     },
@@ -248,6 +253,10 @@ export default {
         });
         //Initialize Database on loadup
         this.getDatabase;
+    },
+
+    components: {
+        new_incident
     }
 }
 </script>
@@ -331,54 +340,9 @@ export default {
 
     <!-- FORM INPUT STUFF-->
     <div v-if="view === 'new_incident'">
-        <!-- Replace this with your actual form: can be done here or by making a new component -->
-        <div class="grid-container">
-            <div class="grid-x grid-padding-x">
-                <h1 class="cell small-12 medium-12 large-12 new-incident-form">New Incident Form</h1>
-            </div>
-        </div>
-        <form>
-            <div class="grid-container" style='border: 1px solid black'>
-                <div class="grid-x grid-padding-x">
-                    <div class="cell small-12 medium-6 large-4">
-                        <label for="case">Case Number:</label>
-                        <input type="text" id="case" name="case" v-model="Case">
-                    </div>
-                    <div class="cell small-12 medium-6 large-4">
-                        <label for="Date">Date (YYYY-MM-DD):</label>
-                        <input type="text" id="Date" name="Date" v-model="date">
-                    </div>
-                    <div class="cell small-12 medium-6 large-4">
-                        <label for="Time">Time (HR:MM:SS):</label>
-                        <input type="text" id="Time" name="Time" v-model="time">
-                    </div>
-                    <div class="cell small-12 medium-6 large-4">
-                        <label for="Code">Code:</label>
-                        <input type="text" id="Code" name="Code" v-model="code">
-                    </div>
-                    <div class="cell small-12 medium-6 large-4">
-                        <label for="Incident">Incident</label>
-                        <input type="text" id="Incident" name="Incident" v-model="incident">
-                    </div>
-                    <div class="cell small-12 medium-6 large-4">
-                        <label for="PGrid">Police Grid</label>
-                        <input type="text" id="PGrid" name="PGrid" v-model="pGrid">
-                    </div>
-                    <div class="cell small-12 medium-6 large-4">
-                        <label for="Neighbor">Neighborhood Name:</label>
-                        <input type="text" id="Neighbor" name="Neighbor" v-model="neighborhood">
-                    </div>
-                    <div class="cell small-12 medium-6 large-4">
-                        <label for="Street">Block/Street:</label>
-                        <input type="text" id="Street" name="Street" v-model="street">
-                    </div>
-                    <div class="cell small-12 medium-6 large-4">
-                        <input type="button" value="SUBMIT" class="button" @click.prevent="newAccidentSubmit">
-                    </div>
-                </div>
-            </div>
-        </form>
+        <new_incident />
     </div>
+       
     <div v-if="view === 'about'">
         <!-- Replace this with your actual about the project content: can be done here or by making a new component -->
 
@@ -459,7 +423,7 @@ export default {
                 <div class="cell small-12 medium-4 large-4 person-box" style="padding-bottom: 2rem">
                     <h3 class="name-header">1</h3>
                     <div class="text-center">
-                        thing
+                        One of the things I found interesting was seeing how 
                     </div>
                 </div>
                 <div class="cell small-12 medium-4 large-4 person-box" style="padding-bottom: 2rem">
