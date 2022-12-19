@@ -34,23 +34,23 @@ export default {
                     se: {lat: 44.883658, lng: -92.993787}
                 },
                 neighborhood_markers: [
-                    {location: [44.942068, -93.020521], marker: null},
-                    {location: [44.977413, -93.025156], marker: null},
-                    {location: [44.931244, -93.079578], marker: null},
-                    {location: [44.956192, -93.060189], marker: null},
-                    {location: [44.978883, -93.068163], marker: null},
-                    {location: [44.975766, -93.113887], marker: null},
-                    {location: [44.959639, -93.121271], marker: null},
-                    {location: [44.947700, -93.128505], marker: null},
-                    {location: [44.930276, -93.119911], marker: null},
-                    {location: [44.982752, -93.147910], marker: null},
-                    {location: [44.963631, -93.167548], marker: null},
-                    {location: [44.973971, -93.197965], marker: null},
-                    {location: [44.949043, -93.178261], marker: null},
-                    {location: [44.934848, -93.176736], marker: null},
-                    {location: [44.913106, -93.170779], marker: null},
-                    {location: [44.937705, -93.136997], marker: null},
-                    {location: [44.949203, -93.093739], marker: null}
+                    {location: [44.942068, -93.020521], marker: null, onMap: true },
+                    {location: [44.977413, -93.025156], marker: null, onMap: true },
+                    {location: [44.931244, -93.079578], marker: null, onMap: true },
+                    {location: [44.956192, -93.060189], marker: null, onMap: true },
+                    {location: [44.978883, -93.068163], marker: null, onMap: true },
+                    {location: [44.975766, -93.113887], marker: null, onMap: true },
+                    {location: [44.959639, -93.121271], marker: null, onMap: true },
+                    {location: [44.947700, -93.128505], marker: null, onMap: true },
+                    {location: [44.930276, -93.119911], marker: null, onMap: true },
+                    {location: [44.982752, -93.147910], marker: null, onMap: true },
+                    {location: [44.963631, -93.167548], marker: null, onMap: true },
+                    {location: [44.973971, -93.197965], marker: null, onMap: true },
+                    {location: [44.949043, -93.178261], marker: null, onMap: true },
+                    {location: [44.934848, -93.176736], marker: null, onMap: true },
+                    {location: [44.913106, -93.170779], marker: null, onMap: true },
+                    {location: [44.937705, -93.136997], marker: null, onMap: true },
+                    {location: [44.949203, -93.093739], marker: null, onMap: true }
                 ]
             },
         };
@@ -73,6 +73,24 @@ export default {
             
             this.leaflet.center.lat= 44.955139;
             this.leaflet.center.lng = -93.102222;
+        },
+
+        neighborMarker(){
+        for (let i = 0; i < this.leaflet.neighborhood_markers.length; i++) {
+            let marker = new L.Marker([this.leaflet.neighborhood_markers[i].location[0], this.leaflet.neighborhood_markers[i].location[1]]);
+            let num = i+1;
+            let url = 'http://localhost:8000/count?neighborhood=' + num;
+            this.getJSON(url).then((results) => {
+            console.log(results);
+            marker.bindPopup(results[0].count + " incidents occured.");
+            this.leaflet.neighborhood_markers[i].marker = marker;
+            marker.addTo(this.leaflet.map);
+            })
+        .catch((error) =>{
+         alert("Marker Error:");
+         console.log(error);
+        })
+        }
         },
 
         getJSON(url) {
@@ -253,7 +271,7 @@ export default {
             console.log('Error:', error);
         });
         //Initialize Database on loadup
-        this.getDatabase;
+        this.getDatabase();
     },
 
     components: {
