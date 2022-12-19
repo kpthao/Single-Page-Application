@@ -361,7 +361,7 @@ export default {
                     <img src="photos/MA_photo.jpg" alt="Photo of Michael Andreucci" width="500px" height="600px">
                     <h3 class="name-header">Michael Andreucci</h3>
                     <div>
-                        Hello, I am currently a senior at St. Thomas studying Computer science. I am currently planning to focus on machine learning after I graduate in the spring. I find machine learnings potential to be fascinating and want to see how much AI can improve the world. 
+                        Hello, I am currently a senior at St. Thomas studying Computer science. I am currently planning to focus on machine learning after I graduate in the spring. I find machine learnings potential to be fascinating and want to see how much AI can improve the world. I am also interested in doing some game development but I don't know if I would prefer that over machine learning at the moment.
                     </div>
                 </div>
                 <div class="cell small-12 medium-4 large-4 person-box">
@@ -423,19 +423,19 @@ export default {
                 <div class="cell small-12 medium-4 large-4 person-box" style="padding-bottom: 2rem">
                     <h3 class="name-header">1</h3>
                     <div class="text-center">
-                        thing
+                        Something I found interesting to see were the various crime "hotspots" where many of the listed crimes occured such as in Capitol River.
                     </div>
                 </div>
                 <div class="cell small-12 medium-4 large-4 person-box" style="padding-bottom: 2rem">
                     <h3 class="name-header">2</h3>
                     <div class="text-center">
-                        thing
+                        It was interesting to see how the time of year affected the amount and the type of crimes commited.
                     </div>
                 </div>
                 <div class="cell small-12 medium-4 large-4 person-box" style="padding-bottom: 2rem">
                     <h3 class="name-header">3</h3>
                     <div class="text-center">
-                        thing
+                        See the total amount of crimes commited since August of 2014 was really shocking. I knew it would be a lot but actually visualising how many was interesting.
                     </div>
                 </div>
                 <div class="cell small-12 medium-4 large-4 person-box" style="padding-bottom: 2rem">
