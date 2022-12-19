@@ -117,7 +117,6 @@ export default {
                 this.incidents = JSON.parse(JSON.stringify(results[0]));            
                 this.neighborhoods = JSON.parse(JSON.stringify(results[1]));
                 this.codes = JSON.parse(JSON.stringify(results[2]));
-                this.drawMarker();
             })
             .catch((error) =>{
                 console.log("Error:", error);
@@ -198,6 +197,8 @@ export default {
                     //Update the searchLatQuery and searchLngQuery values
                     this.searchLatQuery = result.lat
                     this.searchLngQuery = result.lng;
+                    let marker = new L.Marker([this.searchLatQuery, this.searchLngQuery])
+                    marker.addTo(this.leaflet.map)
                 } else {
                     //if there are no results, show an error message
                     alert('No results found for the given address')
@@ -231,7 +232,7 @@ export default {
 
     },
     //Sets up Leaflet map and adds it to the page. Also adds tile layer and GeoJSON data to the map.
-    mounted() {
+    async mounted() {
         this.leaflet.map = L.map('leafletmap').setView([this.leaflet.center.lat, this.leaflet.center.lng], this.leaflet.zoom);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -441,19 +442,19 @@ export default {
                 <div class="cell small-12 medium-4 large-4 person-box" style="padding-bottom: 2rem">
                     <h3 class="name-header">4</h3>
                     <div class="text-center">
-                        thing
+                        It was interesting to see the breakdown of what types of crime were commited. It seems like property crime was the most prevalent.
                     </div>
                 </div>
                 <div class="cell small-12 medium-4 large-4 person-box" style="padding-bottom: 2rem">
                     <h3 class="name-header">5</h3>
                     <div class="text-center">
-                        thing
+                        Not so much about the data itself but it was interesting to see how the map updates when paning and zooming on incidents.
                     </div>
                 </div>
                 <div class="cell small-12 medium-4 large-4 person-box" style="padding-bottom: 2rem">
                     <h3 class="name-header">6</h3>
                     <div class="text-center">
-                        thing
+                        Lastly I found it interesting to see how few incidents occured near summit hill compared to other places.
                     </div>
                 </div>
             </div>
