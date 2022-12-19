@@ -107,7 +107,7 @@ export default {
                 });
             });
         },
-        getDatabase(query=""){
+        getDatabase(){
             let incident_url = "http://localhost:8000/incidents?" + query;
             let neighborhood_url = "http://localhost:8000/neighborhoods";
             let code_url = "http://localhost:8000/codes"
