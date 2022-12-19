@@ -16,7 +16,7 @@ export default {
             incidents: [],
             address: '',
             map: null,
-            Case: '', date: '', time: '', code: '', incident: '',pGrid: '',neighborhood: '', street: '',
+            case_number: '', date: '', time: '', code: '', incident: '',police_grid: '', neighborhood_number: '', block: '',
             searchAddressQuery: '',
             searchLatQuery: '',
             searchLngQuery: '',
@@ -423,7 +423,7 @@ export default {
                 <div class="cell small-12 medium-4 large-4 person-box" style="padding-bottom: 2rem">
                     <h3 class="name-header">1</h3>
                     <div class="text-center">
-                        One of the things I found interesting was seeing how 
+                        thing
                     </div>
                 </div>
                 <div class="cell small-12 medium-4 large-4 person-box" style="padding-bottom: 2rem">
