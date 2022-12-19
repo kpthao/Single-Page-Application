@@ -47,7 +47,7 @@ export default {
                   alert("Incident added");
                 },
                 error: function (xhr, thrownError) {
-                    alert(thrownError);
+                    alert("Please fill in required information");
                 }
             });
         }
